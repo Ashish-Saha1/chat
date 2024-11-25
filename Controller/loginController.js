@@ -1,7 +1,9 @@
 
-function loginController(req,res,next){
-    
+function getLogin(req,res,next){
+    res.render('index')
 }
 
 
-exports.module = loginController;
+module.exports = {
+    getLogin
+};

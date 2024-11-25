@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { getLogin } = require('../Controller/loginController')
+const { getUser } = require('../Controller/userController')
 const decorateHtmlResponse = require('../Middleware/Common/decorateHtmlResponse')
 
-router.get("/", decorateHtmlResponse("Login"), getLogin)
+router.get("/",decorateHtmlResponse("User"), getUser)
 
 
 

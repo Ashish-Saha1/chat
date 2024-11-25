@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title><%= title %></title>
 </head>
 <body>
-    <p>This is an error</p>
+    <p><%= error.message %></p>
+    <p><%= error.status %></p>
+    <p><%= error %></p>
 </body>
 </html>

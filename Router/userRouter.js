@@ -8,8 +8,8 @@ const avaterUpload = require('../Middleware/users/avaterUpload')
 
 router.get("/",decorateHtmlResponse("User"), getUser);
 
-
-router.post('/', avaterUpload, getUser)
+//Add User
+router.post('/', avaterUpload)
 
 
 

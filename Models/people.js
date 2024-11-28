@@ -24,6 +24,7 @@ const peopleSchema = mongoose.Schema({
         type : String
     },
     role : {
+        type : String,
         enum : ['admin','user'],
         default : 'user'
     }  
@@ -38,4 +39,4 @@ const peopleSchema = mongoose.Schema({
 
 const People = mongoose.model('People', peopleSchema);
 
-module.exports = people;
+module.exports = People;

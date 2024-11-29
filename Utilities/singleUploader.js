@@ -29,7 +29,7 @@ const uploader = function(
 
 })
 
-    const upload = multer.upload({
+    const upload = multer({
         storage : storage,
 
         limits : {

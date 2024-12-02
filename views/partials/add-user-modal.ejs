@@ -42,6 +42,14 @@
     const modal = document.querySelector("#add-user-modal");
     const form = document.querySelector("#add-user-form");
 
+    
+
+    // Success Toast
+  const successToast = Toastify({
+    text: "User was added successfully! Reloading the list...",
+    duration: 1000,
+  });
+
     function closeModal() {
       modal.style.display = "none";
     }
@@ -54,10 +62,24 @@
     form.onsubmit =async function(event){
       event.preventDefault();
 
+    //first clear errors 
+      const errorPlaceHolders = document.querySelectorAll('p.error');
+      for(let i of errorPlaceHolders){
+        i.style.display = "none"
+      }
+
+      // clear red border from input
+      const inputErrors = document.querySelectorAll("input.error");
+      for(let i of inputErrors){
+        j.classList.remove('error')
+      }
+
+
+
       //Prepare formData
 
-      const formData = new FormData(form);
-
+      
+      const formData = new FormData(form)
       //send request to server with fetch
 
       const response = await fetch('/users', {
@@ -71,9 +93,28 @@
         Object.keys(result.errors).forEach((fieldName) => {
           //add error class name to border red of input file 
             form[fieldName].classList.add('error');
-            
+
+            //Set all the error placeholder p tag
+          
+      const errorPlaceHolder = document.querySelectorAll(`${fieldName}-error`);
+            errorPlaceHolder.textContent = result.errors[fieldName].msg;
+
+            //Visiable all place holder p tag
+            errorPlaceHolder.style.display = "block";
+
+
         })
       }else{
+        successToast.showToast();
+        closeModal()
+        document.querySelectorAll("p.error").style.display = "none";
+
+        //Reload this page after 1 secoend
+
+        setTimeout(() => {
+          location.reload()
+        }, 1000);
+
 
       }
 

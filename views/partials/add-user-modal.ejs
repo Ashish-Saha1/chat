@@ -1,127 +1,135 @@
 
 <div class="modal-wrapper" id="add-user-modal">
-    <div class="modal">
-      <a href="#" onclick="closeModal()" class="modal-close">+</a>
-      <div class="modal-title">
-        <h2>Create New User</h2>
-      </div>
-      <div class="modal-body">
-        <form 
-        action="/users" 
-        method="post" 
-        enctype="multipart/form-data" 
-        id="add-user-form"
-        >
-        <input type="text" placeholder="enter name" name="name" />
-        <p class="error name-error"></p>
+  <div class="modal">
+    <a href="#" onclick="closeModal()" class="modal-close">+</a>
+    <div class="modal-title">
+      <h2>Create New User</h2>
+    </div>
+    <div class="modal-body">
+      <form 
+      action="/users" 
+      method="post" 
+      enctype="multipart/form-data" 
+      id="add-user-form"
+      >
+      <input type="text" placeholder="enter name" name="name" />
+      <p class="error name-error"></p>
 
-        <input type="text" placeholder="enter email" name="email" />
-        <p class="error email-error"></p>
+      <input type="text" placeholder="enter email" name="email" />
+      <p class="error email-error"></p>
 
-        <input type="text" placeholder="enter mobile" name="mobile" />
-        <p class="error mobile-error"></p>
+      <input type="text" placeholder="enter mobile" name="mobile" />
+      <p class="error mobile-error"></p>
 
-        <input type="password" placeholder="enter password" name="password"/>
-        <p class="error password-error"></p>
+      <input type="password" placeholder="enter password" name="password"/>
+      <p class="error password-error"></p>
 
-        <input type="file" name="avatar" />
-        <p class="error avatar-error"></p>
+      <input type="file" name="avatar" />
+      <p class="error avatar-error"></p>
 
-        <p class="error common-error"></p>
-        <input type="submit" value="Submit" />
-        </form>
-      </div>
+      <p class="error common-error"></p>
+      <input type="submit" value="Submit" />
+      </form>
     </div>
   </div>
+</div>
 
 
 
 
-  <script>
+<script>
+  
+  const modal = document.querySelector("#add-user-modal");
+  const form = document.querySelector("#add-user-form");
+
+  
+
+  // Success Toast
+const successToast = Toastify({
+  text: "User was added successfully! Reloading the list...",
+  duration: 1000,
+});
+
+  function closeModal() {
+    modal.style.display = "none";
+  }
+  function openModal() {
+    modal.style.display = "block";
+  }
+
+
+
+  // form.onsubmit = async function(event){
     
-    const modal = document.querySelector("#add-user-modal");
-    const form = document.querySelector("#add-user-form");
+
+
+
+  // };
+
+  form.onsubmit = async function(event) {
+    event.preventDefault();
+
+  //first clear errors 
+    const errorPlaceHolders = document.querySelectorAll("p.error");
+    for (let i = 0; i < errorPlaceHolders.length; i++) {
+      errorPlaceHolders[i].style.display = "none";
+    }
+
+    // clear red border from input
+    const inputErrors = document.querySelectorAll("input.error");
+    if (inputErrors.length > 0) {
+      for (let j = 0; j < inputErrors.length; j++) {
+        inputErrors[j].classList.remove("error");
+      }
+    }
+
+
+
+    //Prepare formData
 
     
+    const formData = new FormData(form)
+    //send request to server with fetch
 
-    // Success Toast
-  const successToast = Toastify({
-    text: "User was added successfully! Reloading the list...",
-    duration: 1000,
-  });
+    const response = await fetch("/users", {
+      method : "POST",
+      body : formData
+    }) 
 
-    function closeModal() {
-      modal.style.display = "none";
-    }
-    function openModal() {
-      modal.style.display = "block";
-    }
+    const result = await response.json();
 
+    if(result.errors){
+      Object.keys(result.errors).forEach((fieldName) => {
+        //add error class name to border red of input file 
+          form[fieldName].classList.add("error");
+          console.log('Check user form data from ejs file');
 
-
-    form.onsubmit =async function(event){
-      event.preventDefault();
-
-    //first clear errors 
-      const errorPlaceHolders = document.querySelectorAll('p.error');
-      for(let i of errorPlaceHolders){
-        i.style.display = "none"
-      }
-
-      // clear red border from input
-      const inputErrors = document.querySelectorAll("input.error");
-      for(let i of inputErrors){
-        j.classList.remove('error')
-      }
+          //Set all the error placeholder p tag      
+    const errorPlaceHolder = document.querySelector(`.${fieldName}-error`);
+          errorPlaceHolder.textContent = result.errors[fieldName].msg;
+          console.log('Check user form data from ejs file');
+          //Visiable all place holder p tag
+          errorPlaceHolder.style.display = "block";
 
 
+      })
+    }else{
+      successToast.showToast();
+      closeModal()
+      document.querySelectorAll("p.error").style.display = "none";
 
-      //Prepare formData
+      //Reload this page after 1 secoend
 
-      
-      const formData = new FormData(form)
-      //send request to server with fetch
-
-      const response = await fetch('/users', {
-        method : "POST ",
-        body : formData
-      }) 
-
-      const result = await response.json();
-
-      if(result.errors){
-        Object.keys(result.errors).forEach((fieldName) => {
-          //add error class name to border red of input file 
-            form[fieldName].classList.add('error');
-
-            //Set all the error placeholder p tag
-          
-      const errorPlaceHolder = document.querySelectorAll(`${fieldName}-error`);
-            errorPlaceHolder.textContent = result.errors[fieldName].msg;
-
-            //Visiable all place holder p tag
-            errorPlaceHolder.style.display = "block";
-
-
-        })
-      }else{
-        successToast.showToast();
-        closeModal()
-        document.querySelectorAll("p.error").style.display = "none";
-
-        //Reload this page after 1 secoend
-
-        setTimeout(() => {
-          location.reload()
-        }, 1000);
-
-
-      }
-
+      setTimeout(() => {
+        location.reload()
+      }, 1000);
 
 
     }
+    
+    
+  }
 
 
 
-  </script>
+</script>

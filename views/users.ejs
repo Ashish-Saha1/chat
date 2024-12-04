@@ -18,14 +18,13 @@
             </tr>
           </thead>
           <tbody id="users-table">
-            <% users.forEach(finction(user){ %>
+            <% users.forEach(function(user){ %>
             
-            <tr id="<% user.id %>">
+            <tr id="<%= user.id %>">
               <td class="name">
                 <% if(user.avater){ %>
-                  <img src=".uploads/avaters/ <%= user.avater %>" />
-                <%  } %>
-                <% else{ %>
+                  <img src="./uploads/avaters/<%= user.avater %>" />
+                <%  }else{ %>
                   <img src="./images/nophoto.png" />
                 <% } %>
                 

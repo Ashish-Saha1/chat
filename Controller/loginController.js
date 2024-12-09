@@ -9,10 +9,10 @@ function getLogin(req,res,next){
     res.render('index')
 }
 
-
+    //LOg in
 async function login(req,res,next) {
     try {
-    const user = await User.findOne({$or:[{mobile:req.body.username}, {email:req.body.email}]});   
+    const user = await User.findOne({$or:[{mobile:req.body.username}, {email:req.body.username}]});   
 
     if(user && user._id){
         const isValidPassword = await bcrypt.compare(req.body.password, user.password);
@@ -56,7 +56,16 @@ async function login(req,res,next) {
     }
 }
 
+
+//Log Out
+function logOut(req,res,next){
+    res.clearCookie(process.env.COOKIE_NAME)
+    res.send("Log Out from login controller")
+}
+
+
 module.exports = {
     getLogin,
-    login
+    login,
+    logOut
 };
